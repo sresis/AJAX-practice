@@ -3,11 +3,11 @@
 // Part 1
 
 $('#get-fortune-button').on('click', () => {
-  $.get('/replaceMe', (response) => {
+  $.get('/fortune', (response) => {
     //
     // This is the body of the callback function for $.get!
     // TODO: use `response` to update the text in `div#fortune-text`
-    //
+    $('#fortune-text').html(response);
   });
 });
 
@@ -19,8 +19,13 @@ $('#weather-form').on('submit', (evt) => {
 
   const formData = {
     // TODO: select the zipcode input
-    zipcode: $('REPLACE THIS').val()
+    zipcode: $('#zipcode-field').val()
   };
+
+  $.get('/weather', formData, (res) => {
+
+    $('#weather-info').html(`${res.forecast}`);
+  });
 
   // TODO: choose a request method (GET or POST) by uncommenting one of
   // these blocks of code
@@ -39,6 +44,23 @@ $('#weather-form').on('submit', (evt) => {
 
 $("#order-form").on('submit', (evt) => {
   evt.preventDefault();
+
+  const formData = $('#order-form').serialize();
+
+  $.post('/order-melons', formData, (res) => {
+
+    if (res.code != 'ERROR') {
+      $('#order-status').html(`${res.msg}`);
+    }
+
+    else {
+      $('#order-status').addClass('order-error');
+      $('#order-status').html(`${res.msg}`);
+    }
+
+  });
+
+  
 
   // TODO: create an object to store key-value pairs that'll be sent to
   // the server
